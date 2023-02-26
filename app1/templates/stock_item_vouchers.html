@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+<div class="container-fluid">
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row d-flex " style=" font-weight:600 ; background-color: rgb(124, 186, 224);color: #000;width: 100%;margin: auto;">
+                <div class="col ">Stock Item Voucher</div>
+                <div class="col-4" style="font-weight:600 ;text-transform:capitalize;">{{company.name}}</div>
+                
+                        <div class= 'col-2'><a href="javascript:history.go(-1);">
+                            <span class="pull-right clickable" data-effect="fadeOut"><i class="fa fa-times" style="color: black;"></i></span></a>
+                        </div> 
+            </div>
+            <div class="table-responsive">
+                <table class="table" style="background-color: rgba(33,57,77,255);color:#fff;">
+                    <tr>
+                    <th colspan="8" >Stock Item : {{item.name }}</th>
+                    <th colspan="8" class="text-right">{{beg_date}} to {{end_date}}</th>
+                    </tr>
+                    <tr>
+                    <th rowspan="2" class="text-left"> Date</th>
+                    <th colspan="3" rowspan="2" class="text-left">Particulars</th>
+                    <th colspan="3" rowspan="2" class="text-right">Vch Type</th>
+                    <th colspan="2" rowspan="2" class="text-right">Vch No.</th>
+                    <th colspan="2" class="text-center border-left">Inwards</th>
+                    <th colspan="2"  class="text-center border-left">Outwards</th>
+                    <th colspan="2" class="text-center border-left">Closing</th>
+                    </tr>
+                    
+                    <tr>
+                    <th class="text-center text-white border-left">Quantity</th>
+                    <th class="text-center text-white">Value</th>
+                    <th class="text-center text-white border-left">Quantity</th>
+                    <th class="text-center text-white">Value</th>
+                    <th class="text-center text-white border-left">Quantity</th>
+                    <th class="text-center text-white">Value</th>
+                    </tr>
+
+                    <tr class="">
+                    <td>{{beg_date}}</td>
+                    <td colspan="8" class="text-left"><i> Opening Balance</i></td>
+                    <td class="border-left text-center">{{item.quantity}} {{item.units}}</td>
+                    <td class="text-center">{{item.value}}</td>
+                    <td class="border-left"></td>
+                    <td></td>
+                    <td class="border-left text-center">{{item.quantity}} {{item.units}}</td>
+                    <td class="text-center">{{item.value}}</td> 
+                    
+                    
+                    </tr>
+
+                    {% for v in voucher %}
+                    
+                    <tr>
+                    <td class="text-left">{{beg_date}}</td>
+                    <td colspan="3" class=" text-left ">{{v.Particulars}}</td>
+                    <td colspan="3" class="text-right">{{v.Voucher_type}}</td>
+                    <td colspan="2" class="text-right">{{v.Voucher_no}}</td>
+                        
+                    {% if v.inwards_qty is not None %}
+                    <th class="border-left text-center">{{v.inwards_qty}} {{item.units}}</th>
+                    <th class="text-center">{{v.inwards_val}}</th>
+                    {% else %}
+                    <th class="border-left"></th>
+                    <th></th>
+                    {% endif %}
+                        
+                    {% if v.outwards_qty is not None %}
+                    <th class="border-left text-center">{{v.outwards_qty}} {{item.units}}</th>
+                    <th class="text-center">{{v.outwards_val}}</th>
+                    {% else %}
+                    <th class="border-left"></th>
+                    <th></th>
+                    {% endif %}
+                    
+                    <th class="border-left text-center">{{v.closing_qty}} {{item.units}}</th>
+                    <th class="text-center">{{v.closing_val}}</th> 
+                    </tr>
+                    {% endfor %}
+
+                    <tr>
+                    <td colspan="9" class="text-center">Totals as per 'Default' Valuation :</td>
+                    {% if sum_in_val != 0 %}
+                    <td class="border-left text-center">{{sum_in_qty}} {{item.units}}</td>
+                    <td class="text-center">{{sum_in_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
+                    {% if sum_out_val != 0  %}
+                    <td class="border-left text-center">{{sum_out_qty}} {{item.units}}</td>
+                    <td class="text-center">{{sum_out_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
+                    {% if sum_closing_val != 0 %}
+                    <td class="border-left text-center">{{sum_closing_qty}} {{item.units}}</td>
+                    <td class="text-center"> {{sum_closing_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<style>
+.trhover:hover{
+    background-color: rgb(31, 40, 68);
+}
+</style>
+
+{% endblock %}
