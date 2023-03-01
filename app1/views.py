@@ -11697,17 +11697,19 @@ def cur_balance_change(request):
     j = request.GET.get('amount')
     type = request.GET.get('curblnct')
 
-    if type == 'Dr':
-        v1 = int(i)- int(j)
-        if v1 < 0:
-            cur_type = 'Cr'
-            val = abs(v1)
-        else:
-            cur_type = 'Dr'
-            val = v1
-    else:
-        val = int(i) + int(j)
-        cur_type = 'Cr'
+    val = int(i) + int(j)
+
+    # if type == 'Dr':
+    #     v1 = int(i)- int(j)
+    #     if v1 < 0:
+    #         cur_type = 'Cr'
+    #         val = abs(v1)
+    #     else:
+    #         cur_type = 'Dr'
+    #         val = v1
+    # else:
+    #     val = int(i) + int(j)
+    #     cur_type = 'Cr'
 
     #print(val) 
     #print(open_type)
@@ -11717,12 +11719,12 @@ def cur_balance_change(request):
 
 
     ledger.current_blnc = val
-    ledger.current_blnc_type = cur_type
+    ledger.current_blnc_type = type
     ledger.save()
    
     #print(ledger)
     
-    context = {'val' : val,'cur_type': cur_type, 'ledger' : ledger }
+    context = {'val' : val,'cur_type': type, 'ledger' : ledger }
     
     return render(request,'curbalance_change.html', context)
 
@@ -11734,29 +11736,29 @@ def pcur_balance_change(request):
     type = request.GET.get('curblnct')
     #print(type)
 
-    val = int(i) + int(j)
+    #val = int(i) + int(j)
     
-    # if type == 'Cr':
-    #     v2 = int(i)- int(j)
-    #     if v2 < 0:
-    #         val = abs(v2)
-    #         cur_type = 'Dr'
-    #     else:
-    #         val = v2
-    #         cur_type = 'Cr'
-    # else:
-    #     val = int(i) + int(j)
-    #     cur_type = 'Dr'
+    if type == 'Cr':
+        v2 = int(i)- int(j)
+        if v2 < 0:
+            val = abs(v2)
+            cur_type = 'Dr'
+        else:
+            val = v2
+            cur_type = 'Cr'
+    else:
+        val = int(i) + int(j)
+        cur_type = 'Dr'
 
     ledger = tally_ledger.objects.get(id = ac)
 
     ledger.current_blnc = val
-    ledger.current_blnc_type = type
+    ledger.current_blnc_type = cur_type
     ledger.save()
     #print(ledger.current_blnc)
 
     
-    return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': type, 'ledger' : ledger })
+    return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': cur_type, 'ledger' : ledger })
 
 def receipt_cur_balance_change(request):
     
