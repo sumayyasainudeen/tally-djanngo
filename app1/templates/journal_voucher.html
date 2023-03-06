@@ -710,6 +710,8 @@
     var id = 1
     function createRowDebit() {
 
+        console.log("hello")
+
         const ac = ($('#debit').val()).split(' ')[0];
         const curblnc = $('#led').val();
         const curblnct = $('#ledt').val();
@@ -759,8 +761,18 @@
 
 
         id++;
-        $(".part").append('<tr style="border: none;"><td colspan="16" style="border: none;" class="mt-4">   <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange="" style="background-color: rgb(17, 54, 86);"><option value="Dr" selected="">Dr</option><option value="Cr" selected="">Cr</option></select>  <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td>    <td colspan="3"></td><td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" value='+ amount1 +'  class = "txt credit_amnt" id= "credit_amnt' + id + '" name = "amnt2" oninput="calculateTotalCredit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
-       
+
+        $(".part").append('<tr style="border: none;"><td colspan="16" style="border: none;" class="mt-4"> <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange="checkOption()" style="background-color: rgb(17, 54, 86);"><option value="Dr">Dr</option><option value="Cr" >Cr</option></select> <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label> <label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" class = "txt debit_amnt" id= "debit_amnt' + id + '" name = "amnt1"  oninput="calculateTotalDebit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRowDebit()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td> ');
+
+
+    }
+
+    function checkOption(){
+        var option = $('#dr_cr_opt' + id).val();
+        console.log(option);
+        if (option == 'Dr') {
+            $(".part").append('<tr style="border: none;"><td colspan="3" class="text-right mt-0" style="border: none; "><input type="number"  class = "txt debit_amnt" id= "debit_amnt' + id + '" name = "amnt1"  oninput="calculateTotaldebit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRowDebit()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td><td colspan="3"></td></tr> ');
+        }
 
     }
 
@@ -816,26 +828,28 @@
 
 
         id++;
-        
 
-        $(".part").append('<tr style="border: none;"><td colspan="18" style="border: none;" class="mt-4">   <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange=""style="background-color: rgb(17, 54, 86);"><option value="Dr" selected="">Dr</option><option value="Cr" selected="">Cr</option></select>  <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td>   <td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" value='+ amount1 +'  class = "txt credit_amnt" id= "credit_amnt' + id + '" name = "amnt2" oninput="calculateTotalCredit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRowCredit()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
-       
+
+        $(".part").append('<tr style="border: none;"><td colspan="18" style="border: none;" class="mt-4">   <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange=""style="background-color: rgb(17, 54, 86);"><option value="Dr" selected="">Dr</option><option value="Cr" selected="">Cr</option></select>  <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td>   <td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" value=' + amount1 + '  class = "txt credit_amnt" id= "credit_amnt' + id + '" name = "amnt2" oninput="calculateTotalCredit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRowCredit()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
+
 
     }
 
 
 
 
-    
-        // $(".part").append('<tr style="border: none;"><td colspan="18" style="border: none;" class="mt-4">   <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange=""style="background-color: rgb(17, 54, 86);"><option value="Dr" selected="">Dr</option><option value="Cr" selected="">Cr</option></select>  <select id="payacc' + id + '"  name="acc1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt' + id + '" name = "amnt" oninput="calculateTotal();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
 
-    
+    // $(".part").append('<tr style="border: none;"><td colspan="18" style="border: none;" class="mt-4">   <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange=""style="background-color: rgb(17, 54, 86);"><option value="Dr" selected="">Dr</option><option value="Cr" selected="">Cr</option></select>  <select id="payacc' + id + '"  name="acc1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt' + id + '" name = "amnt" oninput="calculateTotal();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + id + '"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
+
+
 
     /*---------------end of create new row-------------*/
 
     /*--------- Total----------*/
 
     function calculateTotalDebit() {
+
+
         var sum = 0;
         var count = $('.debit_amnt').length
 
@@ -851,7 +865,10 @@
     }
 
     function calculateTotalCredit() {
-        
+
+        val = document.getElementById("credit_amnt");
+        console.log(val);
+
         var sum = 0;
         var count = $('.credit_amnt').length
 
