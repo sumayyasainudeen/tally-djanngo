@@ -11759,6 +11759,7 @@ def pcur_balance_change(request):
     
     return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': type, 'ledger' : ledger })
 
+
 def receipt_cur_balance_change(request):
     
     ac = request.GET.get('ac')
