@@ -1771,9 +1771,10 @@ class journal_voucher(models.Model):
     voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
 
     jid = models.IntegerField(null=True)
-    account = models.CharField(max_length= 255, null=True)
+    # account = models.CharField(max_length= 255, null=True)
     date = models.DateField(blank = True, null= True)
-    amount = models.IntegerField(null= True)
+    debit = models.IntegerField(null= True)
+    credit = models.IntegerField(null= True)
     narration = models.CharField(max_length=255,null=True)
 
 

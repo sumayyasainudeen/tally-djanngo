@@ -804,6 +804,11 @@ urlpatterns = [
     path('list_journal_voucher',views.list_journal_voucher,name='list_journal_voucher'),
     path('journal_vouchers',views.journal_vouchers,name='journal_vouchers'),
 
+    path('journal_pcur_balance_change' , views.journal_pcur_balance_change,name='journal_pcur_balance_change'), 
+    path('create_journal_voucher' , views.create_journal_voucher,name='create_journal_voucher'),                   
+
+
+
 
  
 ]
