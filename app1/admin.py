@@ -146,4 +146,4 @@ admin.site.register(stock_item_voucher)
 
 @admin.register(journal_voucher)
 class journal_voucher_Admin(admin.ModelAdmin):
-    list_display=('voucher','jid','date','debit','credit','narration')
+    list_display=('voucher','jid','jname','date','debit','credit','narration')

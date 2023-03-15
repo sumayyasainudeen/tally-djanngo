@@ -12133,7 +12133,7 @@ def journal_vouchers(request):
 
         comp = Companies.objects.get(id = t_id)
         
-        name = request.POST.get('ptype')
+        name = request.POST.get('jtype')
      
         vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
 
@@ -12143,7 +12143,7 @@ def journal_vouchers(request):
         #for i in range(1,len(ledg_grp_all)):
 
      
-        v  = journal_voucher.objects.values('jid').last()
+        v  = journal_voucher.objects.values('jid').filter(jname = name).last() 
         
         counter = 1 if v is None else int(v['jid']) + 1
 
@@ -12198,6 +12198,7 @@ def create_journal_voucher(request):
         if request.method=='POST':
 
             jid = request.POST['idlbl']
+            jname = request.POST['type']
             # acc = request.POST['acc']
             # accnt = acc.split()
             date1 = request.POST.get('date1')
@@ -12206,7 +12207,7 @@ def create_journal_voucher(request):
             nrt = request.POST.get('narrate')
 
             
-        journal_voucher(jid = jid ,date = date1 , debit = debit , credit = credit , narration = nrt ,voucher = vouch).save()
+        journal_voucher(jid = jid ,jname = jname ,date = date1 , debit = debit , credit = credit , narration = nrt ,voucher = vouch).save()
 
         
         return redirect('/list_journal_voucher')
