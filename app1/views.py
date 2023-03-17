@@ -3433,6 +3433,26 @@ def companycreate(request):
         out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
         n.fin_end=out.date()
         n.save()
+
+        # Create a default journal voucher for the company
+        
+        voucher = Voucher()
+        voucher.company = n
+        voucher.voucher_name = 'Journal'
+        voucher.voucher_type = 'Journal'
+        voucher.abbreviation = 'Jrnl'
+        voucher.voucherActivate = 'No'
+        voucher.voucherNumber = 'Automatic'
+        voucher.voucherEffective = 'No'
+        voucher.transaction = 'No'
+        voucher.make_optional = 'No'
+        voucher.voucherNarration = 'Yes'
+        voucher.provideNarration = 'No'
+        voucher.track_purchase = 'No'
+        voucher.prnt_VA_save = 'No'
+        voucher.save()
+
+
         subject = 'Welcome Tally Prime'
         message = 'Congratulations,\n' \
         'You have successfully registered with our website.\n' \
@@ -12101,10 +12121,12 @@ def list_journal_voucher(request):
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
             t_id = request.session['t_id']
+            #print(t_id)
         else:
             return redirect('/')
-
-        ledger = tally_ledger.objects.all()
+        
+        company = Companies.objects.get(id = t_id)
+        ledger = tally_ledger.objects.filter(company_id = t_id)
         for i in range(len(ledger)):
             #print(ledger[i])
             
@@ -12114,8 +12136,7 @@ def list_journal_voucher(request):
 
                 ledger[i].save()
         #print(ledger)
-
-        voucher = Voucher.objects.filter(voucher_type = 'Journal')
+        voucher = Voucher.objects.filter(voucher_type = 'Journal' , company = company)
         context = {
                     'voucher': voucher,
 
@@ -12137,8 +12158,8 @@ def journal_vouchers(request):
      
         vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
 
-        ledg_grp_all = tally_ledger.objects.all()
-        ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'])
+        ledg_grp_all = tally_ledger.objects.filter(company = comp)
+        ledg_grp = tally_ledger.objects.filter(company = comp, under__in = ['Bank_Accounts','Cash_in_Hand'])
 
         #for i in range(1,len(ledg_grp_all)):
 
@@ -12189,12 +12210,6 @@ def create_journal_voucher(request):
 
         comp = Companies.objects.get(id = t_id)
         
-
-        name=request.POST['type']
-                       
-
-        vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
-
         if request.method=='POST':
 
             jid = request.POST['idlbl']
@@ -12205,12 +12220,18 @@ def create_journal_voucher(request):
             debit = request.POST.get('total1')
             credit = request.POST.get('total2')
             nrt = request.POST.get('narrate')
-
-            
-        journal_voucher(jid = jid ,jname = jname ,date = date1 , debit = debit , credit = credit , narration = nrt ,voucher = vouch).save()
-
+            name=request.POST['type']
         
-        return redirect('/list_journal_voucher')
+            vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
+            
+            journal_voucher(jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt, voucher=vouch).save()
+            return redirect('/list_journal_voucher')
+           
+        else:
+            return redirect('/list_journal_voucher')
+                    
+            
+       
 
 
 
