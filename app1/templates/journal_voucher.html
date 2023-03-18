@@ -277,13 +277,6 @@
                                         <i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button>
                                 </td>
 
-                                <!-- <td colspan="3" class="text-right mt-0" style="border: none; ">
-                                    <input type="number" class='txt credit_amnt' id='credit_amnt1' name='amnt2'
-                                        oninput="calculateTotalCredit();" onchange='showTransaction();'>
-                                    <button type="button" class="butn" id='butn1' onclick="createRow()">
-                                        <i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button>
-                                </td> -->
-
 
                             </tr>
 
@@ -315,323 +308,21 @@
                     </table>
 
                 </div>
-                <!-- {% if message %}
-                <div class="enter w-100 py-1 mt-0 text-center text-danger"><h4>{{ message }}</h4></div>
-                {% endif %} -->
+                {% if error_message %}
                 <div class="enter w-100 py-1 mt-0">
-                    
-                    <button type='submit' class="btn  w-30" onclick = checkTally()>SAVE</button><br>
-                    
+                    <h5 class="text-center text-danger">{{ error_message }}</h5>
                 </div>
-                
+                {% endif %}
+                <div class="enter w-100 py-1 mt-0">
+
+                    <button type='submit' class="btn  w-30" >SAVE</button><br>
+
+                </div>
+
 
             </form>
 
         </div>
-        <!--popup form -->
-        <div class="form-popup popup1 p-0 m-0 " id="trs_type" style="background-color: #213b52; border-radius: 2px;">
-            <div class="row d-flex"
-                style="background-color:  rgb(17, 169, 240);color:rgb(0, 0, 0);width: 100%;margin: auto;">
-                <div class="col-10" style="font-weight:600 ;text-transform:capitalize;">Transaction Types</div>
-                <div class='col'>
-                    <span class="pull-right clickable" data-effect="fadeOut" onclick="closeForm()"><i
-                            class="fa fa-times"></i></span></a>
-                </div>
-            </div>
-
-            <form class="form-container1">
-
-                <div class="col-sm-6 p-3">
-                    <ul id='trlist'>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal"> ATM</li>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal">Card</li>
-                        <li class="btns_prnt" id="opts" data-target="#cheque" data-toggle="modal">Cheque</li>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal">ECS</li>
-                        <li class="btns_prnt" id="opts" data-target="#efund" data-toggle="modal">e-Fund Transfer</li>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal">Electronic Cheque</li>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal">Electronic DD/PO</li>
-                        <li class="btns_prnt" id="opts" data-target="#others" data-toggle="modal">Others</li>
-                    </ul>
-
-                </div>
-            </form>
-        </div>
-
-        <!--end of popup form-->
-
-        <!-- Modal others -->
-        <div class="modal fade" id="others">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure;">
-                    <div class="modal-header">
-                        <div class="row container m-0 p-2">
-                            <div class="col-10 text-align-center">
-
-                                <label>Bank Allocation for
-                                    &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-                                <label id='othacc' name='bacc' class="font-weight-bold font-italic"></label><br>
-                                <label>For &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </label>
-                                <label id='tramt'></label>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="close align-items-end"
-                                    data-dismiss="modal">&times;</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-body">
-                        <form class=" 100vw" id='modalForm' action="" method='post'>
-
-                            {% csrf_token %}
-                            <div class="row container m-0 p-2">
-                                <div class="col-7 ">
-                                    <h4 class="font-weight-bold">Transaction Type</h4>
-
-                                </div>
-                                <div class="col-3">
-                                    <h4 class="text-align-end font-weight-bold">Amount</h4>
-
-                                </div>
-
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-2">
-                                <div class="col-7">
-                                    <label id='t_type' name='t_type' class="font-italic"></label>
-                                </div>
-                                <div class="col-3">
-                                    <label id='amount' name="amount"></label>
-
-                                </div>
-
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-4">
-                                <div class="col-5 form-group">
-                                    <label>Inst No.</label>
-                                    <input type="text" class="form-control" id='instnum' name='instnum'
-                                        style="width: 250px;height: 25px;">
-
-                                </div>
-
-                                <div class="col-5 form-group">
-                                    <label>Inst Date</label>
-                                    <input type="date" id='instdate' class="form-control" name='instdate'
-                                        style="width: 250px;height: 25px;">
-
-                                </div>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-block text-uppercase text-shadow" data-dismiss="modal"
-                                style="margin-left: 300px;" id='modalSave'>SAVE</button>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal cheque -->
-        <div class="modal fade" id="cheque">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure;">
-                    <div class="modal-header">
-                        <div class="row container m-0 p-2">
-                            <div class="col-10 text-align-center">
-
-                                <label>Bank Allocation for
-                                    &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-                                <label id='chacc' name='bacc'
-                                    class="font-weight-bold text-emphasis font-italic"></label><br>
-                                <label>For &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </label>
-                                <label id='chamt'></label>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="close align-items-end"
-                                    data-dismiss="modal">&times;</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-body">
-                        <form class=" 100vw" id='modalForm' action="" method='post'>
-
-                            {% csrf_token %}
-                            <div class="row container m-0 p-2">
-                                <div class="col-7">
-                                    <h4>Transaction Type</h4>
-
-
-                                </div>
-                                <div class="col-3">
-                                    <h4 class="text-align-end">Amount</h4>
-
-                                </div>
-
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-0">
-                                <div class="col-7">
-                                    <label id='t_type' name='t_type'><em>Cheque</em></label>
-
-
-                                </div>
-                                <div class="col-3">
-                                    <label id='chamnt' name="amount"></label>
-
-                                </div>
-
-                            </div>
-                            <hr>
-
-
-                            <div class="row container m-0 p-3">
-                                <div class="col-5">
-                                    <label>Cheque Range:</label>
-                                    <label id='chrange'></label>
-
-                                </div>
-
-
-                            </div>
-                            <div class="row container m-0 p-0">
-                                <div class="col-5">
-                                    <label>Inst No.</label><br>
-                                    <label id='chnum'></label>
-
-                                </div>
-
-                                <div class="col-5 form-group">
-                                    <label>Inst Date</label>
-                                    <input type="date" id='chdate' class="form-control" name="instdate"
-                                        style="width: 250px;height: 25px;">
-
-                                </div>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-block text-uppercase text-shadow" data-dismiss="modal"
-                                style="margin-left: 300px;" id='modalSave'>SAVE</button>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal efund -->
-        <div class="modal fade" id="efund">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure;">
-                    <div class="modal-header">
-                        <div class="row container m-0 p-2">
-                            <div class="col-10 text-align-center">
-
-                                <label>Bank Allocation for
-                                    &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-                                <label id='efacc' name='bacc'
-                                    class="font-weight-bold text-emphasis font-italic"></label><br>
-                                <label>For &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </label>
-                                <label id='efamt'></label>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="close align-items-end"
-                                    data-dismiss="modal">&times;</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-body">
-                        <form class=" 100vw" id='modalForm' action="" method='post'>
-
-                            {% csrf_token %}
-                            <div class="row container m-0 p-0">
-                                <div class="col-7">
-                                    <h4>Transaction Type</h4>
-
-
-                                </div>
-                                <div class="col-3">
-                                    <h4 class="text-align-end">Amount</h4>
-
-                                </div>
-
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-0">
-                                <div class="col-7">
-                                    <label id="t_type" name='t_type'><em>e-Fund Transfer</em></label>
-
-
-                                </div>
-                                <div class="col-3">
-                                    <label id='efamnt' name="amount"></label>
-
-                                </div>
-
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-2"></div>
-
-                            <div class="row container m-0 p-0 justify-content-right">
-                                <div class="col-5 form-group">
-                                    <label>A/c No.:</label>
-                                    <input type="text" id='efaccnum' class="form-control"
-                                        style="width: 250px; height: 25px;">
-
-                                </div>
-
-                                <div class="col-5 form-group">
-                                    <label>IFS Code:</label>
-                                    <input type="text" id='efifs' class="form-control"
-                                        style="width: 250px; height: 25px;">
-
-                                </div>
-                            </div>
-                            <div class="row container m-0 p-0">
-                                <div class="col-5 form-group">
-                                    <label>Bank Name:</label>
-                                    <input type="text" id='efbank' class="form-control"
-                                        style="width: 250px;height: 25px; ">
-
-                                </div>
-
-                            </div>
-                            <div class="row container m-0 p-0">
-                                <div class="col-5 form-group">
-                                    <label>Inst No.</label>
-                                    <input type="text" id='efnum' class="form-control" name="instnum"
-                                        style="width: 250px; height: 25px;">
-
-                                </div>
-
-                                <div class="col-5 form-group">
-                                    <label>Inst Date</label>
-                                    <input type="date" id='efdate' class="form-control" name="instdate"
-                                        style="width: 250px;height: 25px;">
-
-                                </div>
-
-                            </div>
-                            <button type="submit" class="btn btn-block text-uppercase text-shadow" data-dismiss="modal"
-                                style="margin-left: 300px;" id='modalSave'>SAVE</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!------------modal end------------->
-
 
 
     </div>
@@ -647,36 +338,6 @@
 
 
 <script>
-
-
-    /*-----------------------set current balance-----------*/
-
-
-    $("#debit").change(function () {
-        const accid = ($(this).val()).split(" ")[0];
-        //console.log(accid);
-        $.ajax({
-            url: '{% url "cur_balance" %}',
-            data: {
-                'id': accid
-            },
-
-            success: function (data) {
-                if (data[0].current_blnc_type == 'Dr') {
-                    curData = '<input id ="led" class= "txt" readonly value = ' + data[0].current_blnc + '> <input id ="ledt" class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
-                }
-                else {
-                    curData = '<input id ="led" class= "txt" readonly value = ' + data[0].current_blnc + ' style="color: red;"> <input id ="ledt" style="color: red;"  class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
-                }
-
-                $("#curbalance").html(curData);
-                //console.log(data);
-            }
-
-        });
-
-    });
-
 
 
     function changeCurbalance() {
@@ -814,12 +475,9 @@
                 // console.log(did);
                 // console.log(cid);
                 $(".part").append('<tr id="row' + id + '" style="border: none;"><td colspan="16" style="border: none;" class="mt-4"> <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onChange="changeOption()" style="background-color: rgb(17, 54, 86);"><option value="Dr">Dr</option><option value="Cr" >Cr</option></select> <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label> <label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" class = "txt debit_amnt" id= "debit_amnt' + did + '" name = "amnt1" value ="' + amount2 + '" onclick="calculateTotalDebit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + did + '"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td><td colspan="3"></td> </tr>');
-
-                // document.getElementById('onacc' + (id - 1)).innerHTML = "On Account :   " + amount1;
             }
             else {
                 document.getElementById('onacc' + (id - 1)).innerHTML = "On Account :   " + amount1;
-                // document.getElementById('onacc'+(id-1)).style.display = "block";
 
             }
 
@@ -841,14 +499,10 @@
 
             if (c_total < d_total) {
                 amount2 = d_total - c_total;
-                // document.getElementById('onacc' + (id - 1)).innerHTML = "On Account :   " + amount1;
                 cid++;
                 did--;
 
                 document.getElementById('row' + id).outerHTML = '<tr id="row' + id + '" style="border: none;"><td colspan="16" style="border: none;" class="mt-4"> <select id="dr_cr_opt' + id + '" name="dr_cr_opt" onchange="changeOption()" style="background-color: rgb(17, 54, 86);"><option value="Cr">Cr</option><option value="Dr" >Dr</option></select> <select id="debit' + id + '"  name="debit1" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000; margin-left: 40px;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label> <label class = "blnc1" id="blnc' + id + '" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc' + id + '" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="3"></td><td colspan="3" class="text-right mt-0" style="border: none; "><input type="number" class = "txt credit_amnt" id= "credit_amnt' + cid + '" name = "amnt2" value ="' + amount2 + '" onclick="calculateTotalCredit();" onchange="showTransaction();"><button type="button" class="butn" id = "butn' + cid + '"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td> </tr>';
-
-
-
             }
             else if (c_total > d_total) {
 
@@ -884,10 +538,6 @@
         }
     }
 
-
-
-
-
     /*---------------end of create new row-------------*/
 
     /*--------- Total----------*/
@@ -921,8 +571,6 @@
             //console.log(value1);
         }
         d_total = sum;
-        // console.log(sum);
-        // document.getElementById('#debit_total1').value='sum';
         $('#debit_total').val(sum);
 
 
@@ -957,205 +605,6 @@
 
     }
 
-function checkTally(){
-    var debit = document.getElementById("debit_total").value;
-    var credit = document.getElementById("credit_total").value;
-    if (debit !== credit) {
-        alert("Debit and credit should be in Tally!!");
-    }
-}
-
-    /************** close pop up form*****************/
-
-    function closeForm() {
-
-        document.getElementById("trs_type").style.display = "none";
-
-
-    }
-
-    /*****************show popup form****************/
-    function showTransaction() {
-        var id = $('#payacc').val();
-        var val_name = id.split(" ")[1];
-        var val_under = id.split(" ")[2];
-        var value1, e;
-
-        //console.log(id_under);
-        if (val_under === "Bank_Accounts") {
-
-            document.getElementById('trs_type').style.display = "block";
-
-
-            var count = $('.amnt').length
-
-            for (var i = 1; i <= count; i++) {
-
-                value1 = document.getElementById("amnt" + i).value;
-                document.getElementById('onacc' + i).innerHTML = "On Account";
-                document.getElementById('onacc' + i).style.display = "block";
-                //console.log(value1);
-            }
-
-        }
-        else {
-            document.getElementById("trs_type").style.display = "hide";
-        }
-        /*-----others----*/
-        $("#othacc").html(val_name);
-        $("#tramt").html(value1);
-        $("#amount").html(value1);
-        /*-----cheque----*/
-        $("#chacc").html(val_name);
-        $("#chamt").html(value1);
-        $("#chamnt").html(value1);
-        /*-----efund----*/
-        $("#efacc").html(val_name);
-        $("#efamt").html(value1);
-        $("#efamnt").html(value1);
-
-        $("#trlist").click(function (e) {
-            trvalue = e.target.innerHTML;
-            $("#t_type").html(trvalue);
-            //console.log(trvalue);
-        });
-
-
-        /*---------------------cheque range display--&---show cheque number automatically-------------------------*/
-        $.ajax({
-
-            url: '{% url "cheque_range" %}',
-            data: {
-                'account_name': $("#chacc").text(),
-                //csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function (data) {
-                console.log(data)
-                if (data[0] != 0) {
-                    chrange = '<label>&nbsp;&nbsp;&nbsp;&nbsp;' + data[0] + '</label><label>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</label><label>' + data[1] + '</label>'
-                }
-                else {
-                    chrange = '&nbsp;&nbsp;&nbsp;&nbsp; Not Applicable'
-                }
-                $('#chrange').html(chrange);
-                if (data[0] != 0) {
-                    if (data[2] != 0) {
-                        cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "' + data[2] + '" style="width: 250px;height: 25px;">'
-                    }
-                    else {
-                        cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "Cheque Range Exceeded" style="width: 250px;height: 25px;">'
-
-                    }
-                }
-                else {
-                    cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum"  style="width: 250px;height: 25px;">'
-                }
-
-                $('#chnum').html(cqnumber);
-            }
-        });
-
-    }
-
-    /*----------------------save modal data to the table--------*/
-    /*----others transactions type ----*/
-
-
-    $(document).on("click", "#modalSave", function () {
-
-        document.getElementById("trs_type").style.display = "none";// close pop up form
-
-        //console.log($('#t_type').text());
-
-
-
-        if ($("#t_type").text() === 'Cheque') {
-
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'bank_transcation' %}",
-
-                data: {
-                    bacc: $("#chacc").text(),
-                    t_type: $("#t_type").text(),
-                    instnum: $("#chnumber").val(),
-                    instdate: $("#chdate").val(),
-                    efaccnum: $("#efaccnum").val(),
-                    efifs: $("#efifs").val(),
-                    efbank: $("#efbank").val(),
-                    amount: $("#chamnt").text(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-
-                },
-
-                success: function (response) {
-
-                    if (response.message === 'success') {
-                        $('#modalForm')[0].reset();
-
-                    }
-
-                },
-
-            });
-        }
-        else if ($("#t_type").text() === 'e-Fund Transfer') {
-
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'bank_transcation' %}",
-
-                data: {
-                    bacc: $("#efacc").text(),
-                    t_type: $("#t_type").text(),
-                    instnum: $("#efnum").val(),
-                    instdate: $("#efdate").val(),
-                    efaccnum: $("#efaccnum").val(),
-                    efifs: $("#efifs").val(),
-                    efbank: $("#efbank").val(),
-                    amount: $("#efamnt").text(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-
-                },
-
-                success: function (response) {
-                    if (response.message === 'success') {
-                        $('#modalForm')[0].reset();
-
-                    }
-                },
-
-            });
-        }
-        else {
-
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'bank_transcation' %}",
-
-                data: {
-                    bacc: $("#othacc").text(),
-                    t_type: $("#t_type").text(),
-                    instnum: $("#instnum").val(),
-                    instdate: $("#instdate").val(),
-                    efaccnum: $("#efaccnum").val(),
-                    efifs: $("#efifs").val(),
-                    efbank: $("#efbank").val(),
-                    amount: $("#amount").text(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-
-                },
-
-                success: function (response) {
-                    if (response.message === 'success') {
-                        $('#modalForm')[0].reset();
-
-                    }
-                },
-
-            });
-        }
-    });
 
 
 </script>

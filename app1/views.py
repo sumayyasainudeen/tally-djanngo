@@ -35,6 +35,7 @@ from django.db.models.functions import Extract
 from django.db.models import Count
 from unittest import TextTestRunner
 from django.db.models import Q
+from .utils import checkTally
 
 # Create your views here.
 
@@ -12199,7 +12200,7 @@ def journal_pcur_balance_change(request):
     #print(ledger.current_blnc)
 
     
-    return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': type, 'ledger' : ledger })
+    return render(request,'journal_pcurbalance_change.html', {'val' : val,'cur_type': type, 'ledger' : ledger })
 
 def create_journal_voucher(request):
     if 't_id' in request.session:
@@ -12224,11 +12225,18 @@ def create_journal_voucher(request):
         
             vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
             
-            journal_voucher(jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt, voucher=vouch).save()
-            return redirect('/list_journal_voucher')
+            if debit == credit:
+                journal_voucher(jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt,
+                                voucher=vouch).save()
+                return redirect('/list_journal_voucher')
+            else:
+                # If the debit and credit totals don't match, return an error message to the user
+                error_message = "Debit and credit total should be in tally!!..You Can Create a New One!!"
+                return render(request, 'journal_voucher.html', {'error_message': error_message})
            
         else:
             return redirect('/list_journal_voucher')
+
                     
             
        
