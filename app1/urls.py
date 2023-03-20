@@ -805,7 +805,10 @@ urlpatterns = [
     path('journal_vouchers',views.journal_vouchers,name='journal_vouchers'),
 
     path('journal_pcur_balance_change' , views.journal_pcur_balance_change,name='journal_pcur_balance_change'), 
-    path('create_journal_voucher' , views.create_journal_voucher,name='create_journal_voucher'),                   
+    path('create_journal_voucher' , views.create_journal_voucher,name='create_journal_voucher'), 
+    
+    path('forgotpassword' , views.forgotpassword,name='forgotpassword'),  
+    path('setnewpassword' , views.setnewpassword,name='setnewpassword'),                 
 
 
 

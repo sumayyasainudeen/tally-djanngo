@@ -35,8 +35,7 @@ from django.db.models.functions import Extract
 from django.db.models import Count
 from unittest import TextTestRunner
 from django.db.models import Q
-from .utils import checkTally
-
+from django.conf import settings
 # Create your views here.
 
 def login(request):
@@ -3430,7 +3429,8 @@ def companycreate(request):
         n.books_begin=request.POST['byear']
         n.currency_symbol=request.POST['currency']
         n.formal_name=request.POST['formal']
-        n.password=random.randint(10000, 99999)
+        n.password=request.POST['password']
+        cpassword=request.POST['cpassword']
         out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
         n.fin_end=out.date()
         n.save()
@@ -3460,8 +3460,8 @@ def companycreate(request):
         'username :'+str(n.email)+'\n' 'password :'+str(n.password) + \
         '\n' 'WELCOME '
         recepient = str(n.email)
-        send_mail(subject, message, EMAIL_HOST_USER,
-                [recepient], fail_silently=False)
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [recepient],fail_silently=False)
+
         msg_success = "Registration successfully Check Your Registered Mail"
         messages.info(request,'Company created successfully(Enable the features as per your business needs)')
         return render(request,'features.html',{'cmp':n,'msg_success':msg_success})
@@ -12236,6 +12236,26 @@ def create_journal_voucher(request):
            
         else:
             return redirect('/list_journal_voucher')
+
+
+def forgotpassword(request):
+     return render(request,'setpassword.html')
+
+def setnewpassword(request):
+    if request.method=='POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        c = Companies.objects.get(email = email)
+        c.password = password
+        c.save()
+        return render(request, 'Login.html')
+    else:
+        return render(request, 'setpassword.html')
+    
+    
+
+
+
 
                     
             
