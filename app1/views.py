@@ -901,7 +901,9 @@ def create_ledger_chequebk(request):
                                 from_number=fn,
                                 to_number = tn,
                                 no_of_cheques = nc,
-                                cheque_bookname = nmc)      
+                                cheque_bookname = nmc,
+                            
+                                )      
             lcb.save() 
             print("Added")
             return redirect('ledger_chequebk')
@@ -11520,10 +11522,10 @@ def list_payment_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-
-        ledger = tally_ledger.objects.all()
+        
+        comp = Companies.objects.get(id = t_id)
+        ledger = tally_ledger.objects.filter(company_id = comp)
         for i in range(len(ledger)):
-            #print(ledger[i])
             
             if ledger[i].current_blnc is None:
                 ledger[i].current_blnc = ledger[i].opening_blnc
@@ -11531,8 +11533,8 @@ def list_payment_voucher(request):
 
                 ledger[i].save()
         #print(ledger)
-
-        voucher = Voucher.objects.filter(voucher_type = 'Payment')
+        
+        voucher = Voucher.objects.filter(voucher_type = 'Payment',company = comp)
         context = {
                     'voucher': voucher,
 
@@ -11552,19 +11554,15 @@ def payment_vouchers(request):
         
         name = request.POST.get('ptype')
      
-        vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+        vouch = Voucher.objects.filter(voucher_type = 'Payment',company = comp).get(voucher_name = name)
 
-        ledg_grp_all = tally_ledger.objects.all()
-        ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'])
-
-        #for i in range(1,len(ledg_grp_all)):
+        ledg_grp_all = tally_ledger.objects.filter(company = comp)
+        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Bank_Accounts','Cash_in_Hand'])
 
      
-        v  = payment_voucher.objects.values('pid').last()
+        v  = 1 if payment_voucher.objects.values('pid').last() is None else payment_voucher.objects.values('pid').last()['pid']+1
         
-        counter = 1 if v is None else int(v['pid']) + 1
-
-        
+       
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
@@ -11572,7 +11570,7 @@ def payment_vouchers(request):
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
-                    'v' : counter,
+                    'v' : v,
                 }
         return render(request,'payment_voucher.html',context)
 
@@ -11588,21 +11586,42 @@ def create_payment_voucher(request):
 
         name=request.POST['type']
                        
-
-        vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+        
+        vouch = Voucher.objects.filter(voucher_type = 'Payment',company = comp).get(voucher_name = name)
 
         if request.method=='POST':
 
-            pid = request.POST['idlbl']
-            acc = request.POST['acc']
+            pid = request.POST.get('idlbl')
+            acc = request.POST.get('acc')
             accnt = acc.split()
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
             nrt = request.POST.get('narrate')
 
-            
-        payment_voucher(pid = pid,account = accnt[1],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            particulars_id = request.POST.getlist("opt[]")
+            amounts = request.POST.getlist("amnt[]")
 
+            
+
+        payment_voucher(company = comp, pid = pid,account = accnt[1],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+
+        pay_vouch=payment_voucher.objects.get(pid=payment_voucher.objects.all().last().pid)
+        
+        particulars = []
+        for i in particulars_id:
+            id = tally_ledger.objects.get(id = i)
+            particulars.append(id.name)
+
+        if len(particulars_id)==len(amounts) and particulars_id and amounts:
+               
+            particular=zip(particulars,particulars_id,amounts)
+            mapped=list(particular)
+            # print(mapped)
+            for m in mapped:
+
+                payment_particulars.objects.get_or_create(particular =m[0],particular_id =m[1] ,amount = m[2], pay_voucher = pay_vouch)
+        
+        
         
         return redirect('/list_payment_voucher')
         
@@ -11614,7 +11633,8 @@ def list_receipt_voucher(request):
         else:
             return redirect('/')
 
-        ledger = tally_ledger.objects.all()
+        comp = Companies.objects.get(id = t_id)
+        ledger = tally_ledger.objects.filter(company_id = comp)
         for i in range(len(ledger)):
             #print(ledger[i])
             
@@ -11624,7 +11644,7 @@ def list_receipt_voucher(request):
 
                 ledger[i].save()
 
-        voucher = Voucher.objects.filter(voucher_type = 'Receipt')
+        voucher = Voucher.objects.filter(voucher_type = 'Receipt',company = comp)
         context = {
                     'voucher' : voucher,
                     }
@@ -11640,20 +11660,14 @@ def receipt_vouchers(request):
 
         comp = Companies.objects.get(id = t_id)
         
+        name = request.POST.get('rtype')
+     
+        vouch = Voucher.objects.filter(voucher_type = 'Receipt',company = comp).get(voucher_name = name)
 
-        if request.method=="POST":
-            
-            name=request.POST['rtype']
-                       
-
-        vouch = Voucher.objects.filter(voucher_type = 'Receipt').get(voucher_name = name)
-
-        ledg_grp_all = tally_ledger.objects.all()
-        ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'])
+        ledg_grp_all = tally_ledger.objects.filter(company = comp)
+        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Bank_Accounts','Cash_in_Hand'])
       
-        v  = receipt_voucher.objects.values('rid').last()
-        
-        counter = 1 if v is None else int(v['rid']) + 1
+        v  = 1 if receipt_voucher.objects.values('rid').last() is None else receipt_voucher.objects.values('rid').last()['rid']+1
 
      
         context = {
@@ -11663,7 +11677,7 @@ def receipt_vouchers(request):
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
-                    'v' : counter,
+                    'v' : v,
                   }
         
         return render(request,'receipt_voucher.html',context)
@@ -11680,25 +11694,45 @@ def create_receipt_voucher(request):
         comp = Companies.objects.get(id = t_id)
         
 
-        if request.method=="POST":
-            
-            name=request.POST['type']
+        name=request.POST['type']
                        
 
-        vouch = Voucher.objects.filter(voucher_type = 'Receipt').get(voucher_name = name)
+        vouch = Voucher.objects.filter(voucher_type = 'Receipt',company = comp).get(voucher_name = name)
 
         if request.method=='POST':
 
-            rid = request.POST['idlbl']
-            acc = request.POST['acc']
+            rid = request.POST.get('idlbl')
+            acc = request.POST.get('acc')
             accnt = acc.split()
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
-            nrt = request.POST['narrate']
-
-            #account = tally_ledger.objects.values('name').get(id = accnt)
+            nrt = request.POST.get('narrate')
             
-            receipt_voucher(rid = rid,account = accnt[1], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            particulars_id = request.POST.getlist("opt[]")
+            amounts = request.POST.getlist("amnt[]")
+
+            
+
+            
+        receipt_voucher(company = comp,rid = rid,account = accnt[1], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+
+        rec_vouch=receipt_voucher.objects.get(rid=receipt_voucher.objects.all().last().rid)
+        
+        particulars = []
+        for i in particulars_id:
+            id = tally_ledger.objects.get(id = i)
+            particulars.append(id.name)
+
+
+        if len(particulars_id)==len(amounts) and particulars_id and amounts:
+               
+            particular=zip(particulars,particulars_id,amounts)
+            mapped=list(particular)
+            for m in mapped:
+                receipt_particulars.objects.get_or_create(particular =m[0],particular_id =m[1] ,amount = m[2], rec_voucher = rec_vouch)
+                
+                
+
 
         return redirect('/list_receipt_voucher')
 
@@ -11754,7 +11788,6 @@ def pcur_balance_change(request):
     j = request.GET.get('amount')
     type = request.GET.get('curblnct')
     #print(type)
-
     
     if type == 'Cr':
         v2 = int(i)- int(j)
@@ -11804,72 +11837,111 @@ def receipt_cur_balance_change(request):
     return render(request,'curbalance_change.html', {'val' : val,'cur_type': cur_type, 'ledger' : ledger })
 
 def receipt_pcur_balance_change(request):
-    
-    ac = request.GET.get('pac')
-    i = request.GET.get('curblnc')
-    j = request.GET.get('amount')
-    type = request.GET.get('curblnct')
-    if type == 'Dr':
-        v1 = int(i)- int(j)
-        if v1 < 0:
-            cur_type = 'Cr'
-            val = abs(v1)
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
         else:
-            cur_type = 'Dr'
-            val = v1
-    else:
-        val = int(i) + int(j)
-        cur_type = 'Cr'
+            return redirect('/')
+        
+        comp = Companies.objects.get(id = t_id)
     
+        ac = request.GET.get('pac')
+        i = request.GET.get('curblnc')
+        j = request.GET.get('amount')
+        type = request.GET.get('curblnct')
+        if type == 'Dr':
+            v1 = int(i)- int(j)
+            if v1 < 0:
+                cur_type = 'Cr'
+                val = abs(v1)
+            else:
+                cur_type = 'Dr'
+                val = v1
+        else:
+            val = int(i) + int(j)
+            cur_type = 'Cr'
+        
 
-    ledger = tally_ledger.objects.get(id = ac)
+        ledger = tally_ledger.objects.get(id = ac)
 
-    #print(val)
-    #print(ledger)
-    return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': cur_type, 'ledger' : ledger })
+        #print(val)
+        #print(ledger)
+        return render(request,'pcurbalance_change.html', {'val' : val,'cur_type': cur_type, 'ledger' : ledger })
 
 def cheque_range(request):
-    
-    acname = request.GET.get('account_name')
 
-    data = []
-
-    cqrange = ledger_chequebook.objects.filter(ledger_name = acname).values() if ledger_chequebook.objects.filter(ledger_name = acname).exists() else None
-    start = 0 if cqrange is None else cqrange[0]['from_number']  
-    end = 0 if cqrange is None else cqrange[0]['to_number'] 
-    q = bank_transcations.objects.filter(bank_account = acname,  transcation_type = 'Cheque').values('instno').last()
-    chqnum = 0 if q is None else q['instno']
-    #print(chqnum)
-    if chqnum < end:
-        chqnum = start if q is None else (int(q['instno']) + 1)
-    else:
-        chqnum = 0
-    
-    
-    data.append(start)
-    data.append(end)
-    data.append(chqnum)  
-    #print(chqnum)
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
         
-    return JsonResponse(data,safe=False)
+        comp = Companies.objects.get(id = t_id)
+    
+        acname = request.GET.get('account_name')
+
+        data = []
+
+        cqrange = ledger_chequebook.objects.filter(ledger_name = acname,company = comp ).values() if ledger_chequebook.objects.filter(ledger_name = acname).exists() else None
+        start = 0 if cqrange is None else cqrange[0]['from_number']  
+        end = 0 if cqrange is None else cqrange[0]['to_number'] 
+        q = bank_transcations.objects.filter(bank_account = acname,  transcation_type = 'Cheque').values('instno').last()
+        chqnum = 0 if q is None else q['instno']
+        #print(chqnum)
+        if chqnum < end:
+            chqnum = start if q is None else (int(q['instno']) + 1)
+        else:
+            chqnum = 0
+        
+        
+        data.append(start)
+        data.append(end)
+        data.append(chqnum)  
+        #print(chqnum)
+            
+        return JsonResponse(data,safe=False)
 
 def bank_transcation(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+        comp = Companies.objects.get(id = t_id)
 
-    if request.method == 'POST':
-        bacc = request.POST.get('bacc')
-        t_type = request.POST.get('t_type')
-        instno = request.POST.get('instnum')
-        instdate = request.POST.get('instdate')
-        acnum = request.POST.get('efaccnum')
-        ifsc = request.POST.get('efifs')
-        bname = request.POST.get('efbank')
-        amount = request.POST.get('amount')
+        if request.method == 'POST':
+            id = request.POST.get('id')
+            vouch_name = request.POST.get('vouch_type')
+            partacc = request.POST.get('part')
+            bacc = request.POST.get('bacc')
+            t_type = request.POST.get('t_type')
+            instno = request.POST.get('instnum')
+            instdate = request.POST.get('instdate')
+            acnum = request.POST.get('efaccnum')
+            ifsc = request.POST.get('efifs')
+            bname = request.POST.get('efbank')
+            amount = request.POST.get('amount')
 
+            vouch_type = Voucher.objects.get(voucher_name = vouch_name.strip(),company = comp)
 
-        bank_transcations(bank_account = bacc ,transcation_type = t_type,instno = instno,instdate = instdate,
-                          amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
+            print(vouch_type)
 
-        return HttpResponse({"message": "success"})
+            if vouch_type.voucher_type == 'Payment':
+
+                bank_transcations(company = comp ,voucher = vouch_type, pay_voucher = id, pay_particular = partacc , bank_account = bacc ,
+                                    transcation_type = t_type,instno = instno,instdate = instdate,
+                                    amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname,cheque_printed = 'No').save()
+                
+            elif vouch_type.voucher_type == 'Receipt':
+
+                bank_transcations(company = comp, voucher = vouch_type, rec_voucher = id, rec_particular = partacc, bank_account = bacc ,
+                                    transcation_type = t_type,instno = instno,instdate = instdate,
+                                    amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
+
+            
+            return HttpResponse({"message": "success"})
     
 
     #------stock summary---------------
@@ -12226,7 +12298,7 @@ def create_journal_voucher(request):
             vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
             
             if debit == credit:
-                journal_voucher(jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt,
+                journal_voucher(company = comp, jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt,
                                 voucher=vouch).save()
                 return redirect('/list_journal_voucher')
             else:
@@ -12251,6 +12323,80 @@ def setnewpassword(request):
         return render(request, 'Login.html')
     else:
         return render(request, 'setpassword.html')
+
+def listbanks(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+        comp = Companies.objects.get(id = t_id)
+        ledgers = tally_ledger.objects.filter(company = comp, under__in = ['Bank_Accounts'])
+
+        context = {
+                    'company' : comp ,
+                    'date' : date.today(),
+                    'ledger_grp' : ledgers,
+                }
+        return render(request,'list_banks.html',context)
+
+def pendingcheques(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+    comp = Companies.objects.get(id = t_id)
+    bank_name = request.POST['bname']
+
+    ledgers = tally_ledger.objects.filter(company = comp)
+    cheques = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque').values()
+    # for ch in cheques:
+    #      p_name = tally_ledger.objects.get(id = ch['pay_particular']).name
+    #      ch['particular_name'] = p_name
+
+    cheques1 = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque')
+    total = 0
+    for i in cheques1:
+        total += i.amount
+    print(total)     
+    context = {
+                 'company' : comp ,
+                 'date' : date.today(),
+                 'bname' : bank_name,
+                 'cheques' : cheques1,
+                 'total' :total,               }
+    return render(request,'list_pending_cheques.html',context)
+        
+
+
+
+
+def chequecreation(request,pk):
+     if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+        comp = Companies.objects.get(id = t_id)
+        cheque = bank_transcations.objects.get(id=pk)
+        pid = cheque.pay_particular
+        print(pid)
+        pname = tally_ledger.objects.get(id = pid).name
+        print(pname)
+
+        context = {
+                    'company' : comp ,
+                    'date' : date.today(),
+                    'cheque' : cheque,
+                    'pname' : pname,               
+                 }
+        return render(request,'cheque.html',context)
+
+
+    
     
     
 

@@ -807,8 +807,16 @@ urlpatterns = [
     path('journal_pcur_balance_change' , views.journal_pcur_balance_change,name='journal_pcur_balance_change'), 
     path('create_journal_voucher' , views.create_journal_voucher,name='create_journal_voucher'), 
     
+    #------forgot password----------------------
+
     path('forgotpassword' , views.forgotpassword,name='forgotpassword'),  
-    path('setnewpassword' , views.setnewpassword,name='setnewpassword'),                 
+    path('setnewpassword' , views.setnewpassword,name='setnewpassword'), 
+
+    #-------cheque printing----------------------
+    
+    path('listbanks' , views.listbanks,name='listbanks'),  
+    path('pendingcheques' , views.pendingcheques,name='pendingcheques'),
+    path('chequecreation/<int:pk>' , views.chequecreation,name='chequecreation'),              
 
 
 
