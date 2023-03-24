@@ -165,6 +165,7 @@
                                 style="color: black;"></i></span></a>
                 </div>
             </div>
+            <form action="" method="post">
             <div class="table-responsive ">
                 <table class="table table-bordered table-sm border-dark" id="chequelist"
                     style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
@@ -210,17 +211,17 @@
                         </div>
                         {% for i in cheques %}
 
-                        <a href="{% url 'chequecreation' i.id %}"><tr id="tid" >
+                        <tr id="tid" >
                             <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
                                 <input type="text" value="{{i.instdate }}" class="text-right"
                                     style="border: none;background-color: rgb(245, 240, 230);" >
                             </td>
                             <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.pay_particular }}" class="text-right"
+                                <input type="text" value="{{i.particular_name }}" class="text-right"
                                     style="border: none;background-color: rgb(245, 240, 230);">
                             </td>
                             <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{bname }}" class="text-right"
+                                <input type="text" value="{{bname }}" name="bname" class="text-right"
                                     style="border: none;background-color: rgb(245, 240, 230);">
                             </td>
                             <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
@@ -241,7 +242,7 @@
                             </td>
                             <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
                                 <a class="btn text-white btn-outline-dark" style="width:100px"
-                                href="{% url 'chequecreation' i.id %}">Print</a>
+                                href="{% url 'chequecreation' i.id  %}">Print</a>
                             </td>
 
 
@@ -273,6 +274,7 @@
 
                     </tfoot>
                 </table>
+            </form>
 
             </div>
             {% if error_message %}

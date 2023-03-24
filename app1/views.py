@@ -12349,18 +12349,20 @@ def pendingcheques(request):
             return redirect('/')
     comp = Companies.objects.get(id = t_id)
     bank_name = request.POST['bname']
-
+    # print(bank_name)
     ledgers = tally_ledger.objects.filter(company = comp)
-    cheques = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque').values()
-    # for ch in cheques:
-    #      p_name = tally_ledger.objects.get(id = ch['pay_particular']).name
-    #      ch['particular_name'] = p_name
+    cheques1 = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name).values()
+    for ch in cheques1:
+         p_name = tally_ledger.objects.get(id = ch['pay_particular']).name
+        #  print(p_name)
+        #  p_name = payment_particulars.objects.filter(particular_id = cheques['pay_particular'],company = comp).values('particular')[0]['particular']
+         ch['particular_name'] = p_name
 
-    cheques1 = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque')
+    cheques = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name)
     total = 0
-    for i in cheques1:
+    for i in cheques:
         total += i.amount
-    print(total)     
+    # print(total)     
     context = {
                  'company' : comp ,
                  'date' : date.today(),
@@ -12385,6 +12387,8 @@ def chequecreation(request,pk):
         pid = cheque.pay_particular
         print(pid)
         pname = tally_ledger.objects.get(id = pid).name
+        # bank_name = request.POST['bname']
+        print(bank_name)
         print(pname)
 
         context = {
@@ -12394,6 +12398,20 @@ def chequecreation(request,pk):
                     'pname' : pname,               
                  }
         return render(request,'cheque.html',context)
+
+def print_cheque(request,pk):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        comp = Companies.objects.get(id = t_id)
+        cheque = bank_transcations.objects.get(id=pk)
+        cheque.cheque_printed = 'Yes'
+        cheque.save()
+        return redirect('listbanks')
+
+
 
 
     

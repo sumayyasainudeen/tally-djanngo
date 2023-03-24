@@ -816,7 +816,9 @@ urlpatterns = [
     
     path('listbanks' , views.listbanks,name='listbanks'),  
     path('pendingcheques' , views.pendingcheques,name='pendingcheques'),
-    path('chequecreation/<int:pk>' , views.chequecreation,name='chequecreation'),              
+    path('chequecreation/<int:pk>' , views.chequecreation,name='chequecreation'), 
+    path('print_cheque/<int:pk>' , views.print_cheque,name='print_cheque'),              
+             
 
 
 
