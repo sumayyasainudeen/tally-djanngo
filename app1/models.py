@@ -1809,6 +1809,15 @@ class journal_voucher(models.Model):
     credit = models.IntegerField(null= True)
     narration = models.CharField(max_length=255,null=True)
 
+class journal_particulars(models.Model):
+    j_voucher = models.ForeignKey(journal_voucher,on_delete=models.CASCADE,null=True,blank=True)
+
+    particular_id = models.IntegerField(null= True)
+    particular = models.CharField(max_length = 100,null=True,blank=True)
+    debit =  models.IntegerField(null= True)
+    credit =  models.IntegerField(null= True)
+
+
 
 
         

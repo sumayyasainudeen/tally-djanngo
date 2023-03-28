@@ -166,127 +166,142 @@
                 </div>
             </div>
             <form action="" method="post">
-            <div class="table-responsive ">
-                <table class="table table-bordered table-sm border-dark" id="chequelist"
-                    style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
-                    <tr class="p-2">
-                        <th>
-                            <a href="" class="btn " style="width:100px"> Create New</a>
-                        </th>
-                        <th colspan="6">
-                            <div class="text-dark text-center"
-                                style="font-weight:600 ;text-transform:capitalize;font-size: 18px;">(Cheque Printing
-                                - Pending Cheques)</div>
-                        </th>
-                        <th class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
+                <div class="table-responsive ">
+                    <table class="table table-bordered table-sm border-dark" id="chequelist"
+                        style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
+                        <tr class="p-2">
+                            <th>
+                            </th>
+                            <th colspan="6">
+                                <div class="text-dark text-center"
+                                    style="font-weight:600 ;text-transform:capitalize;font-size: 18px;">(Cheque Printing
+                                    - Pending Cheques)</div>
+                            </th>
+                            <th class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
                             border-left:none ; color: #000;">
 
-                            <div>{{date | date:'d-M-Y'}}</div>
-                            <input type="hidden" name='date1' value="{{date1|date:'Y-m-d'}}">
-                            <div>{{date | date:'l'}}</div>
-                        </th>
+                                <div>{{date | date:'d-M-Y'}}</div>
+                                <input type="hidden" name='date1' value="{{date1|date:'Y-m-d'}}">
+                                <div>{{date | date:'l'}}</div>
+                            </th>
 
-                    </tr>
+                        </tr>
 
-                    <tbody style="border-color: rgb(112, 111, 111); " class='part'>
-                        <div>
+                        <tbody style="border-color: rgb(112, 111, 111); " class='part'>
+                            <div>
+                                <tr>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Date</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Particulars</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Bank Name</th>
+                                    <!-- <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Account No</th> -->
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Instrument No</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Instrument Date</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Printed?</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Amount</th>
+                                    <th class="text-right text-dark"
+                                        style=" font: weight 8px;size: 15px; border: none;">
+                                        Action</th>
+                                </tr>
+                            </div>
+                            {% for i in cheques %}
+
+                            <tr id="tid">
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{i.instdate }}" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{i.particular_name }}" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{bname }}" name="bname" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <!-- <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{acno }}" name="bname" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td> -->
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{i.instno }}" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{i.instdate }}" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{ i.cheque_printed }}" class="text-right"
+                                        style="border: none;background-color: rgb(245, 240, 230);">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <input type="text" value="{{i.amount }}" class="text-right txtcal" id="amount"
+                                        style="border: none;background-color: rgb(245, 240, 230);"
+                                        onclick="calculateSelectedTotal(this.value)">
+                                </td>
+                                <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
+                                    <a class="btn text-white btn-outline-dark" style="width:100px"
+                                        href="{% url 'chequecreation' i.id  %}">Preview</a>
+                                </td>
+
+
+                            </tr></a>
+
+                            {% endfor %}
+
+                        </tbody>
+
+
+                        <tfoot>
                             <tr>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Date</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Particulars</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Bank Name</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Instrument Number</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Instrument Date</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Printed?</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Amount</th>
-                                <th class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">
-                                    Action</th>
+                                <td colspan="6" style="border: none; ">
+                                    <label class="text-dark text-right">Selected Total : </label>
+                                </td>
+                                <td class="text-right border text-dark" style="border: none; ">
+                                    <input type="number" class='text-right ' id='selected_total' name='total1'>
+                                </td>
                             </tr>
-                        </div>
-                        {% for i in cheques %}
+                            <tr>
+                                <td colspan="6" style="border: none; ">
+                                    <label class="text-dark text-right">Grand Total : </label>
+                                </td>
+                                <td class="text-right " style="border: none; ">
+                                    <input type="number" class='text-right text-dark' id='grand_total' name='total2'
+                                        value="{{ total }}" onload="calculateGrandTotal()">
+                                </td>
+                            </tr>
 
-                        <tr id="tid" >
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.instdate }}" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);" >
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.particular_name }}" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{bname }}" name="bname" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.instno }}" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.instdate }}" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{ i.cheque_printed }}" class="text-right"
-                                    style="border: none;background-color: rgb(245, 240, 230);">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <input type="text" value="{{i.amount }}" class="text-right txtcal" id="amount"
-                                    style="border: none;background-color: rgb(245, 240, 230);" onclick="calculateSelectedTotal(this.value)">
-                            </td>
-                            <td class="text-right text-dark " style=" font: weight 8px;size: 15px; border: none;">
-                                <a class="btn text-white btn-outline-dark" style="width:100px"
-                                href="{% url 'chequecreation' i.id  %}">Print</a>
-                            </td>
-
-
-                        </tr></a>
-
-                        {% endfor %}
-
-                    </tbody>
-
-
-                    <tfoot>
-                        <tr>
-                            <td colspan="6" style="border: none; ">
-                                <label class="text-dark text-right">Selected Total : </label>
-                            </td>
-                            <td class="text-right border text-dark" style="border: none; ">
-                                <input type="number" class='text-right ' id='selected_total' name='total1'>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" style="border: none; ">
-                                <label class="text-dark text-right">Grand Total : </label>
-                            </td>
-                            <td class="text-right " style="border: none; ">
-                                <input type="number"  class='text-right text-dark' id='grand_total' name='total2' value="{{ total }}"
-                                    onload="calculateGrandTotal()">
-                            </td>
-                        </tr>
-
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
             </form>
 
-            </div>
-            {% if error_message %}
-            <div class="enter w-100 py-1 mt-0">
-                <h5 class="text-center text-danger">{{ error_message }}</h5>
-            </div>
-            {% endif %}
-
         </div>
-
+        {% if error_message %}
+        <div class="enter w-100 py-1 mt-0">
+            <h5 class="text-center text-danger">{{ error_message }}</h5>
+        </div>
+        {% endif %}
 
     </div>
+
+
+</div>
 </div>
 
 
@@ -301,7 +316,7 @@
 <script>
     selected_values = [];
     selected_total = 0;
-    function calculateSelectedTotal(value){
+    function calculateSelectedTotal(value) {
         // console.log(value);
         selected_total += parseInt(value);
         console.log(selected_total);
@@ -309,7 +324,7 @@
 
     }
 
-   
+
 </script>
 
 {% endblock %}

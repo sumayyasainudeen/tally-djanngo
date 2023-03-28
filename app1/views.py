@@ -12274,6 +12274,7 @@ def journal_pcur_balance_change(request):
     
     return render(request,'journal_pcurbalance_change.html', {'val' : val,'cur_type': type, 'ledger' : ledger })
 
+
 def create_journal_voucher(request):
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
@@ -12294,12 +12295,35 @@ def create_journal_voucher(request):
             credit = request.POST.get('total2')
             nrt = request.POST.get('narrate')
             name=request.POST['type']
+
+            particulars_id = request.POST.getlist("opt[]")
+            debits = request.POST.getlist("debit_amnt[]")
+            credits = request.POST.getlist("credit_amnt[]")
         
             vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
             
             if debit == credit:
                 journal_voucher(company = comp, jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt,
                                 voucher=vouch).save()
+
+
+                j_vouch=journal_voucher.objects.filter(company = comp).last()
+                
+        
+                particulars = []
+                for i in particulars_id:
+                    id = tally_ledger.objects.get(id = i)
+                    particulars.append(id.name)
+
+                if len(particulars_id)==(len(debits) + len(credits)) and particulars_id and debits and credits:
+                    
+                    particular=zip(particulars,particulars_id,debits,credits)
+                    mapped=list(particular)
+                    # print(mapped)
+                    for m in mapped:
+
+                        journal_particulars.objects.get_or_create(particular =m[0],particular_id =m[1] ,debit = m[2] ,credit = m[3], j_voucher = j_vouch)
+        
                 return redirect('/list_journal_voucher')
             else:
                 # If the debit and credit totals don't match, return an error message to the user
@@ -12308,6 +12332,43 @@ def create_journal_voucher(request):
            
         else:
             return redirect('/list_journal_voucher')
+
+
+
+# def create_journal_voucher(request):
+#     if 't_id' in request.session:
+#         if request.session.has_key('t_id'):
+#             t_id = request.session['t_id']
+#         else:
+#             return redirect('/')
+
+#         comp = Companies.objects.get(id = t_id)
+        
+#         if request.method=='POST':
+
+#             jid = request.POST['idlbl']
+#             jname = request.POST['type']
+#             # acc = request.POST['acc']
+#             # accnt = acc.split()
+#             date1 = request.POST.get('date1')
+#             debit = request.POST.get('total1')
+#             credit = request.POST.get('total2')
+#             nrt = request.POST.get('narrate')
+#             name=request.POST['type']
+        
+#             vouch = Voucher.objects.filter(voucher_type = 'Journal').get(voucher_name = name)
+            
+#             if debit == credit:
+#                 journal_voucher(company = comp, jid=jid, jname=jname, date=date1, debit=debit, credit=credit, narration=nrt,
+#                                 voucher=vouch).save()
+#                 return redirect('/list_journal_voucher')
+#             else:
+#                 # If the debit and credit totals don't match, return an error message to the user
+#                 error_message = "Debit and credit total should be in tally!!..You Can Create a New One!!"
+#                 return render(request, 'journal_voucher.html', {'error_message': error_message})
+           
+#         else:
+#             return redirect('/list_journal_voucher')
 
 
 def forgotpassword(request):
@@ -12349,7 +12410,10 @@ def pendingcheques(request):
             return redirect('/')
     comp = Companies.objects.get(id = t_id)
     bank_name = request.POST['bname']
+    ledger = tally_ledger.objects.get(company = comp,name = bank_name)
+    acc_no = ledger.acc_no
     # print(bank_name)
+    # print(acc_no)
     ledgers = tally_ledger.objects.filter(company = comp)
     cheques1 = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name).values()
     for ch in cheques1:
@@ -12367,6 +12431,7 @@ def pendingcheques(request):
                  'company' : comp ,
                  'date' : date.today(),
                  'bname' : bank_name,
+                 'acno' : acc_no,
                  'cheques' : cheques1,
                  'total' :total,               }
     return render(request,'list_pending_cheques.html',context)
@@ -12384,18 +12449,20 @@ def chequecreation(request,pk):
         
         comp = Companies.objects.get(id = t_id)
         cheque = bank_transcations.objects.get(id=pk)
+        bname = cheque.bank_account
         pid = cheque.pay_particular
         print(pid)
-        pname = tally_ledger.objects.get(id = pid).name
-        # bank_name = request.POST['bname']
-        print(bank_name)
-        print(pname)
+        pname = tally_ledger.objects.get(company = comp,id = pid).name
+        acc_no = tally_ledger.objects.get(company = comp,name = bname).acc_no
+        # print(bank_name)
+        # print(pname)
 
         context = {
                     'company' : comp ,
                     'date' : date.today(),
                     'cheque' : cheque,
-                    'pname' : pname,               
+                    'pname' : pname,
+                    'acno' : acc_no,               
                  }
         return render(request,'cheque.html',context)
 
